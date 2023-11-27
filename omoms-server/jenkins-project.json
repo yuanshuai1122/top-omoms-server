@@ -31,7 +31,7 @@
       "Type": "COMMAND_STATUS",
       "Script": {
         "推送镜像": "cd ${PROJECT_PATH};docker build -f build-script/Dockerfile -t yuanshuai1122/omoms-server:1.0.0 .;docker push yuanshuai1122/omoms-server:1.0.0;docker rmi yuanshuai1122/omoms-server:1.0.0",
-        "部署镜像": "docker run -d -p 8081:8081 --name omoms-server yuanshuai1122/omoms-server:1.0.0;"
+        "部署镜像": "docker pull yuanshuai1122/omoms-server:1.0.0;docker run -d -p 8081:8081 --name omoms-server yuanshuai1122/omoms-server:1.0.0;"
       }
     }
   }
