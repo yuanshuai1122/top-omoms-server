@@ -1,7 +1,4 @@
 {
-  "RuntimeVariable": {
-    "PROJECT_VERSION": "1.0.0"
-  },
   "初始化": {
     "检查Java环境": {
       "Type": "COMMAND_STDOUT",
@@ -34,8 +31,8 @@
       "Type": "COMMAND_STATUS",
       "Script": {
         "登录dockerhub":"docker login -u yuanshuai1122 -p Yu@n8huai123",
-        "拷贝文件": "cd ${PROJECT_PATH};docker build -f build-script/Dockerfile -t yuanshuai1122/omoms-server:${PROJECT_VERSION} .;docker push yuanshuai1122/omoms-server:${PROJECT_VERSION};docker rmi yuanshuai1122/omoms-server:${PROJECT_VERSION}",
-        "更新k8s里的镜像": "docker run -d -p 8081:8081 --name omoms-server yuanshuai1122/omoms-server:${PROJECT_VERSION};"
+        "拷贝文件": "cd ${PROJECT_PATH};docker build -f build-script/Dockerfile -t yuanshuai1122/omoms-server:1.0.0 .;docker push yuanshuai1122/omoms-server:1.0.0;docker rmi yuanshuai1122/omoms-server:1.0.0",
+        "更新k8s里的镜像": "docker run -d -p 8081:8081 --name omoms-server yuanshuai1122/omoms-server:1.0.0;"
       }
     }
   }
