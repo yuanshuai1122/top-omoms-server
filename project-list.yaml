@@ -1,0 +1,3 @@
+CheckboxParameter:
+  - key: omoms-server
+    value: /omoms-server

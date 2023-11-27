@@ -1,0 +1,39 @@
+{
+  "RuntimeVariable": {
+    "PROJECT_VERSION": "http://k8sproject.oa.gyyx.cn/K8s/version/addversion?domainname=stage-helpv5-gyyx-cn&desc=${JOB_NAME}&user=${REAL_USER_NAME}&branchname=${branch_name}"
+  },
+  "初始化": {
+    "绑定构建参数": {
+      "Type": "BUILD_PARAMETER_DROP_DOWN_MENU",
+      "StepsName": "部署",
+      "ParamName": "deploy-choice"
+    }
+  },
+  "编译构建": {
+    "执行Maven构建": {
+      "Type": "COMMAND_STATUS",
+      "Script": {
+        "Maven构建": "cd ${PROJECT_PATH};mvn clean package -U -DskipTests"
+      }
+    }
+  },
+  "部署": {
+    "部署到内网": {
+      "Type": "COMMAND_STATUS",
+      "Script": {
+        "create configmap": "cd ${PROJECT_PATH};sed -i 's/^/    /g' src/main/resources/application.yaml;cat k8s-script/stage-helpv5-template.yaml src/main/resources/application.yaml > k8s-script/stage-helpv5-gyyx-cn.yaml;",
+        "拷贝文件": "cd ${PROJECT_PATH}; sed -i 's/enabled: false/enabled: true/g' src/main/resources/bootstrap.yml;docker build -f k8s-script/Dockerfile -t repo.gydev.cn:8082/cn-gyyx-helpv5/stage-helpv5-gyyx-cn:${PROJECT_VERSION} .;docker push repo.gydev.cn:8082/cn-gyyx-helpv5/stage-helpv5-gyyx-cn:${PROJECT_VERSION};docker rmi repo.gydev.cn:8082/cn-gyyx-helpv5/stage-helpv5-gyyx-cn:${PROJECT_VERSION}",
+        "切换POD用户": "kubectl config use-context jenkins@default-cluster",
+        "创建configmap": "cd ${PROJECT_PATH};sed -i 's/namespace: {NAMESPACE}/namespace: dypt-local/g' k8s-script/stage-helpv5-gyyx-cn.yaml;kubectl apply -f k8s-script/stage-helpv5-gyyx-cn.yaml",
+        "更新k8s里的镜像": "cd ${PROJECT_PATH};sed -i 's/image-version/${PROJECT_VERSION}/g' k8s-script/service-pod.yaml;kubectl apply -f k8s-script/service-pod.yaml -n dypt-local"
+      }
+    },
+    "部署到外网": {
+      "Type": "COMMAND_STATUS",
+      "Script": {
+        "create configmap": "cd ${PROJECT_PATH};sed -i 's/^/    /g' src/main/resources/application.yaml;cat k8s-script/stage-helpv5-template.yaml src/main/resources/application.yaml > k8s-script/stage-helpv5-gyyx-cn.yaml;",
+        "拷贝文件": "cd ${PROJECT_PATH}; sed -i 's/enabled: false/enabled: true/g' src/main/resources/bootstrap.yml;docker build -f k8s-script/Dockerfile -t repo.gydev.cn:8082/cn-gyyx-helpv5/stage-helpv5-gyyx-cn:${PROJECT_VERSION} .;docker push repo.gydev.cn:8082/cn-gyyx-helpv5/stage-helpv5-gyyx-cn:${PROJECT_VERSION};docker rmi repo.gydev.cn:8082/cn-gyyx-helpv5/stage-helpv5-gyyx-cn:${PROJECT_VERSION}"
+      }
+    }
+  }
+}
