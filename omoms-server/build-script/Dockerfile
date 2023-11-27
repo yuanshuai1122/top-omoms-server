@@ -1,11 +1,9 @@
-FROM openjdk:17-alpine
+FROM openjdk:17-jdk
 
-RUN apk update \
-    && apk add busybox-extras \
-RUN cd / \
-    && mkdir data
-COPY target/*.jar /data/program.jar
+WORKDIR /app
+
+COPY target/*.jar /app/program.jar
 
 EXPOSE 8081
 
-CMD ["java","-Xmx512m","-Xms512m","-jar","/data/program.jar"]
+CMD ["java","-Xmx512m","-Xms512m","-jar","/app/program.jar"]
