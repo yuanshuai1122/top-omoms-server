@@ -1,15 +1,12 @@
 @Library('shared-library') _
 
-def projectlist = 'https://github.com/yuanshuai1122/top-omoms-server/raw/main/project-list.yaml'
-k8sCluster(projectURL: projectlist)
-
 pipeline {
 	agent any
 	stages {
 		stage('初始化') {
 			steps {
 				script{
-					runWrapper.loadJSON('/jenkins-project.json')
+					runWrapper.loadJSON('/${project-list}/jenkins-project.json')
 					runWrapper.runSteps('初始化')
 				}
 			}
