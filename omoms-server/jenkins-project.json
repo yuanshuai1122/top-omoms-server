@@ -1,4 +1,7 @@
 {
+  "RuntimeVariable": {
+    "PROJECT_VERSION": "1.0.0"
+  },
   "初始化": {
     "检查Java环境": {
       "Type": "COMMAND_STDOUT",
