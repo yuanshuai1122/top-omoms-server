@@ -1,5 +1,8 @@
 @Library('shared-library') _
 
+def projectlist = 'https://github.com/yuanshuai1122/top-omoms-server/raw/main/project-list.yaml'
+k8sCluster(projectURL: projectlist)
+
 pipeline {
 	agent any
 	stages {
