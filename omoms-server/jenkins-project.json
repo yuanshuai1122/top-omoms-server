@@ -3,7 +3,7 @@
     "检查Java环境": {
       "Type": "COMMAND_STDOUT",
       "Script": {
-        "输出Java版本": "java -version 2>&1"
+        "输出Java版本": "/work-space/projects/java/jdk-17.0.9/bin/java -version 2>&1"
       }
     },
     "检查Maven环境": {
@@ -30,9 +30,8 @@
     "部署服务器": {
       "Type": "COMMAND_STATUS",
       "Script": {
-        "登录dockerhub":"docker login -u 'yuanshuai1122' -p 'Yu@n8huai123'",
-        "拷贝文件": "cd ${PROJECT_PATH};docker build -f build-script/Dockerfile -t yuanshuai1122/omoms-server:1.0.0 .;docker push yuanshuai1122/omoms-server:1.0.0;docker rmi yuanshuai1122/omoms-server:1.0.0",
-        "更新k8s里的镜像": "docker run -d -p 8081:8081 --name omoms-server yuanshuai1122/omoms-server:1.0.0;"
+        "推送镜像": "cd ${PROJECT_PATH};docker build -f build-script/Dockerfile -t yuanshuai1122/omoms-server:1.0.0 .;docker push yuanshuai1122/omoms-server:1.0.0;docker rmi yuanshuai1122/omoms-server:1.0.0",
+        "部署镜像": "docker run -d -p 8081:8081 --name omoms-server yuanshuai1122/omoms-server:1.0.0;"
       }
     }
   }
