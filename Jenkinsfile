@@ -1,32 +1,43 @@
+@Library('shared-library') _
+
 pipeline {
-    agent any
-
-    tools {
-        // Install the Maven version configured as "M3" and add it to the path.
-        maven "M3"
-    }
-
-    stages {
-        stage('Build') {
-            steps {
-                // Get some code from a GitHub repository
-                git 'https://github.com/jglick/simple-maven-project-with-tests.git'
-
-                // Run Maven on a Unix agent.
-                sh "mvn -Dmaven.test.failure.ignore=true clean package"
-
-                // To run Maven on a Windows agent, use
-                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
-            }
-
-            post {
-                // If Maven was able to run the tests, even if some of the test
-                // failed, record the test results and archive the jar file.
-                success {
-                    junit '**/target/surefire-reports/TEST-*.xml'
-                    archiveArtifacts 'target/*.jar'
-                }
-            }
-        }
-    }
+	agent any
+	stages {
+		stage('初始化') {
+			steps {
+				script{
+					runWrapper.loadJSON('/jenkins-project.json')
+					runWrapper.runSteps('初始化')
+				}
+			}
+		}
+		stage('代码检查') {
+			steps {
+				script{
+					runWrapper.runSteps('代码检查')
+				}
+			}
+		}
+		stage('单元测试') {
+			steps {
+				script{
+					runWrapper.runSteps('单元测试')
+				}
+			}
+		}
+		stage('编译构建') {
+			steps {
+				script{
+					runWrapper.runSteps('编译构建')
+				}
+			}
+		}
+		stage('部署') {
+			steps {
+				script{
+					runWrapper.runSteps('部署')
+				}
+			}
+		}
+	}
 }
