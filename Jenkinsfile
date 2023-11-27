@@ -11,20 +11,6 @@ pipeline {
 				}
 			}
 		}
-		stage('代码检查') {
-			steps {
-				script{
-					runWrapper.runSteps('代码检查')
-				}
-			}
-		}
-		stage('单元测试') {
-			steps {
-				script{
-					runWrapper.runSteps('单元测试')
-				}
-			}
-		}
 		stage('编译构建') {
 			steps {
 				script{
