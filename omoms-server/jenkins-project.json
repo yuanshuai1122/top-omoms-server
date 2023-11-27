@@ -3,13 +3,13 @@
     "检查Java环境": {
       "Type": "COMMAND_STDOUT",
       "Script": {
-        "输出Java版本": "/work-space/projects/java/jdk-17.0.9/bin/java -version 2>&1"
+        "输出Java版本": "java -version 2>&1"
       }
     },
     "检查Maven环境": {
       "Type": "COMMAND_STDOUT",
       "Script": {
-        "输出Maven版本": "mvn -v -Djava.home=/work-space/projects/java/jdk-17.0.9"
+        "输出Maven版本": "mvn -v"
       }
     },
     "绑定构建参数": {
@@ -22,7 +22,7 @@
     "执行Maven构建": {
       "Type": "COMMAND_STATUS",
       "Script": {
-        "Maven构建": "cd ${PROJECT_PATH};mvn clean package -U -DskipTests -Djava.home=/work-space/projects/java/jdk-17.0.9"
+        "Maven构建": "cd ${PROJECT_PATH};mvn clean package -U -DskipTests"
       }
     }
   },
