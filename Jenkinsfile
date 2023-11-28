@@ -21,10 +21,7 @@ pipeline {
 		stage('部署') {
 			steps {
 				script{
-				    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        runWrapper.runSteps('部署')
-                    }
-
+				    runWrapper.runSteps('部署')
 				}
 			}
 		}
