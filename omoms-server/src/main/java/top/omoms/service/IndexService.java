@@ -8,8 +8,10 @@ import top.omoms.beans.common.ResultBean;
 import top.omoms.beans.entity.Banner;
 import top.omoms.beans.entity.User;
 import top.omoms.beans.vo.BannerVO;
+import top.omoms.beans.vo.NewestCourse;
 import top.omoms.enums.RetCodeEnum;
 import top.omoms.mapper.BannerMapper;
+import top.omoms.mapper.CourseMapper;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +24,8 @@ public class IndexService {
 
 
     private final BannerMapper bannerMapper;
+
+    private final CourseMapper courseMapper;
 
 
     public ResultBean<Object> getBanners() {
@@ -41,5 +45,11 @@ public class IndexService {
 
         return new ResultBean<>(RetCodeEnum.SUCCESS, "获取成功", collect);
 
+    }
+
+    public ResultBean<Object> getNewestCourses() {
+        List<NewestCourse> newestCourses = courseMapper.selectNewestCourses();
+        log.info("获取最新列表课程成功, newestCourses:{}", newestCourses);
+        return new ResultBean<>(RetCodeEnum.SUCCESS, "获取成功", newestCourses);
     }
 }

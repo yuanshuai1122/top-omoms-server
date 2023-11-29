@@ -17,10 +17,18 @@ public class IndexController {
     private final IndexService indexService;
 
 
-    @GetMapping("/banners")
+    @GetMapping("/banner/list")
     public ResultBean<Object> getBanners() {
         log.info("获取banner图开始");
+
         return indexService.getBanners();
+    }
+
+    @GetMapping("/course/list/newest")
+    public ResultBean<Object> getNewestCourses() {
+        log.info("获取最新课程列表");
+
+        return indexService.getNewestCourses();
     }
 
 }
