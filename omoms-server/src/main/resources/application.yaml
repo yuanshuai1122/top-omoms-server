@@ -5,7 +5,7 @@ spring:
   datasource:
     username: root
     password: hh%Gy&rTYM@oepc6
-    url: jdbc:mysql://bj-cynosdbmysql-grp-o9u7ldum.sql.tencentcdb.com:21457/omom_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=true
+    url: jdbc:mysql://bj-cynosdbmysql-grp-o9u7ldum.sql.tencentcdb.com:21457/omoms_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=true
   data:
     redis:
       host: 103.142.86.124
