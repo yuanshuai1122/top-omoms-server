@@ -28,6 +28,11 @@ public class IndexService {
     private final CourseMapper courseMapper;
 
 
+    /**
+     * 获取首页banner图
+     *
+     * @return {@link ResultBean}<{@link Object}>
+     */
     public ResultBean<Object> getBanners() {
 
         List<Banner> banners = new LambdaQueryChainWrapper<>(bannerMapper)
@@ -47,6 +52,11 @@ public class IndexService {
 
     }
 
+    /**
+     * 获取最新课程
+     *
+     * @return {@link ResultBean}<{@link Object}>
+     */
     public ResultBean<Object> getNewestCourses() {
         List<NewestCourse> newestCourses = courseMapper.selectNewestCourses();
         log.info("获取最新列表课程成功, newestCourses:{}", newestCourses);
