@@ -17,10 +17,11 @@ public interface CourseMapper extends BaseMapper<Course> {
      * @return
      */
     @Select({
-            "SELECT c.id, c.cover, c.title, c.description, cc.category_name, t.nickname",
+            "SELECT c.id, c.cover, c.title, c.description, cc.category_name, t.nickname, ck.click_count",
             "FROM course c",
             "LEFT JOIN course_category cc ON c.category_id = cc.id",
             "LEFT JOIN tutor t ON c.tutor_id = t.id",
+            "LEFT JOIN course_click ck ON ck.course_id = c.id",
             "WHERE c.is_deleted = 0",
             "AND cc.is_deleted = 0",
             "AND t.is_deleted = 0",

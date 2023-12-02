@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import top.omoms.beans.common.ResultBean;
+import top.omoms.service.BannerService;
 import top.omoms.service.CourseService;
 
 /**
@@ -47,11 +48,20 @@ public class IndexController {
         return courseService.getNewestCourses();
     }
 
-    @PostMapping("/course/count/add")
-    public ResultBean<Object> addCourseClickCount(@RequestBody Integer courseId) {
-        log.info("开始增加课程点击量, courseId：{}", courseId);
 
-        return null;
+    /**
+     * 增加课程点击量
+     * @param courseId 课程id
+     */
+    @PostMapping("/course/count/add")
+    public void addCourseClickCount(@RequestBody Integer courseId) {
+        try {
+            log.info("开始增加课程点击量, courseId：{}", courseId);
+            courseService.addCourseClickCount(courseId);
+        }catch (Exception e) {
+            log.error("增加课程点击量发生异常, courseId:{}, e:{}", courseId, e.toString());
+        }
+
     }
 
 }
