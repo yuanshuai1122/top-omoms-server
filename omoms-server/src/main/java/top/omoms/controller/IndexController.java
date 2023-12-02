@@ -48,6 +48,20 @@ public class IndexController {
         return courseService.getNewestCourses();
     }
 
+    /**
+     * 分页获取全部课程列表
+     * @param pageNum 页数
+     * @param pageSize 页大小
+     * @return
+     */
+    @GetMapping("/course/list/all")
+    public ResultBean<Object> getAllCourses(@RequestParam("pageNum") Integer pageNum,
+                                            @RequestParam("pageSize") Integer pageSize) {
+        log.info("开始获取全部课程列表, pageNum:{}, pageSize:{}", pageNum, pageSize);
+
+        return courseService.getAllCourses(pageNum, pageSize);
+    }
+
 
     /**
      * 增加课程点击量
