@@ -2,11 +2,9 @@ package top.omoms.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.omoms.beans.common.ResultBean;
-import top.omoms.service.IndexService;
+import top.omoms.service.CourseService;
 
 /**
  * 首页相关接口
@@ -20,7 +18,9 @@ import top.omoms.service.IndexService;
 @RequestMapping("/index")
 public class IndexController {
 
-    private final IndexService indexService;
+    private final CourseService courseService;
+
+    private final BannerService bannerService;
 
 
     /**
@@ -32,7 +32,7 @@ public class IndexController {
     public ResultBean<Object> getBanners() {
         log.info("获取banner图开始");
 
-        return indexService.getBanners();
+        return bannerService.getBanners();
     }
 
     /**
@@ -44,7 +44,14 @@ public class IndexController {
     public ResultBean<Object> getNewestCourses() {
         log.info("获取最新课程列表");
 
-        return indexService.getNewestCourses();
+        return courseService.getNewestCourses();
+    }
+
+    @PostMapping("/course/count/add")
+    public ResultBean<Object> addCourseClickCount(@RequestBody Integer courseId) {
+        log.info("开始增加课程点击量, courseId：{}", courseId);
+
+        return null;
     }
 
 }
