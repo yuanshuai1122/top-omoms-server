@@ -46,6 +46,10 @@ public class CourseService {
      * @return
      */
     public ResultBean<Object> getAllCourses(Integer pageNum, Integer pageSize) {
+
+        pageNum = pageNum == 0 ? 1 : pageNum;
+        pageNum = ( pageNum -1 ) * pageSize;
+
         List<AllCourse> allCourses = courseMapper.selectAllCourses(pageNum, pageSize);
         log.info("获取全部列表课程结果, allCourses:{}", allCourses);
 
@@ -58,7 +62,7 @@ public class CourseService {
      */
     public void addCourseClickCount(CourseClickCountDTO dto) {
         Course course = courseMapper.selectById(dto.getCourseId());
-        log.info("增加课程点击量查询课程, dto:{}", dto);
+        log.info("增加课程点击量查询课程, dto:{}, course:{}", dto, course);
         if (null == course) {
             return;
         }

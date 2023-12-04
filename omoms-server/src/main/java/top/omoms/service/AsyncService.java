@@ -29,15 +29,15 @@ public class AsyncService {
             // 未查到 初始化
             if (null == courseClick) {
                 CourseClick courseClickNew = new CourseClick();
-                courseClickNew.setCourseId(courseClick.getCourseId());
-                courseClickNew.setClickCount(0);
+                courseClickNew.setCourseId(courseClickCount.getCourseId());
+                courseClickNew.setClickCount(1);
                 courseClickNew.setFirstClickTime(new Date());
                 courseClickNew.setLastClickTime(new Date());
                 int insert = courseClickMapper.insert(courseClickNew);
                 if (insert <= 0) {
-                    throw new RuntimeException("新增课程点击量发生异常, courseId:" + courseClick.getClickCount());
+                    throw new RuntimeException("新增课程点击量发生异常, courseId:" + courseClickCount.getCourseId());
                 }
-                log.info("异步新增课程点击量成功, courseId:{}", courseClick.getCourseId());
+                log.info("异步新增课程点击量成功, courseId:{}", courseClickCount.getCourseId());
                 return;
             }
             courseClick.setClickCount(courseClick.getClickCount() + 1);
