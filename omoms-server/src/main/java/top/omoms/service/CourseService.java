@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.omoms.beans.common.ResultBean;
+import top.omoms.beans.dto.CourseClickCountDTO;
+import top.omoms.beans.entity.Course;
 import top.omoms.beans.vo.AllCourse;
 import top.omoms.beans.vo.NewestCourse;
 import top.omoms.enums.RetCodeEnum;
@@ -52,9 +54,14 @@ public class CourseService {
 
     /**
      * 增加课程点击量
-     * @param courseId 课程id
+     * @param dto 课程dto
      */
-    public void addCourseClickCount(Integer courseId) {
-        asyncService.addCourseClickCount(courseId);
+    public void addCourseClickCount(CourseClickCountDTO dto) {
+        Course course = courseMapper.selectById(dto.getCourseId());
+        log.info("增加课程点击量查询课程, dto:{}", dto);
+        if (null == course) {
+            return;
+        }
+        asyncService.addCourseClickCount(dto);
     }
 }

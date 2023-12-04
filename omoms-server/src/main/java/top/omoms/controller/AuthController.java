@@ -9,11 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @program: omom
- * @description: 认证相关控制器
- * @author: yuanshuai
- * @create: 2023-11-24 13:01
- **/
+ * 登录认证相关接口
+ *
+ * @author yuanshuai
+ * @date 2023/11/30
+ */
 @RestController
 @Slf4j
 @RequiredArgsConstructor
