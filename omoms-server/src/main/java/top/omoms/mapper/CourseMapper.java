@@ -43,7 +43,6 @@ public interface CourseMapper extends BaseMapper<Course> {
             "LEFT JOIN tutor_info ti ON ti.tutor_id = c.tutor_id",
             "LEFT JOIN course_click ck ON ck.course_id = c.id",
             "WHERE c.is_deleted = 0",
-            "AND cc.is_deleted = 0",
             "AND t.is_deleted = 0",
             "ORDER BY ck.click_count DESC",
             "LIMIT #{pageSize} OFFSET #{pageNum};"
