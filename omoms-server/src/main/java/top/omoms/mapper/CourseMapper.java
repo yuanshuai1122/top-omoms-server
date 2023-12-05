@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import top.omoms.beans.entity.Course;
 import top.omoms.beans.vo.AllCourse;
+import top.omoms.beans.vo.CourseIntroVo;
 import top.omoms.beans.vo.NewestCourse;
 
 import java.util.List;
@@ -49,5 +50,20 @@ public interface CourseMapper extends BaseMapper<Course> {
     })
     List<AllCourse> selectAllCourses(@Param("pageNum") Integer pageNum,
                                      @Param("pageSize") Integer pageSize);
+
+    /**
+     * 根据id查询课程详情
+     * @param courseId 课程id
+     */
+    @Select({
+            "select c.title, c.description, t.nickname as 'tutor_name', ti.avatar as tutor_avatar, tt.title as 'tutor_title'",
+            "from course c",
+            "left join tutor t on t.id = c.tutor_id",
+            "left join tutor_info ti on ti.tutor_id = t.id",
+            "left join tutor_title tt on ti.title_id = tt.id",
+            "where c.is_deleted = 0 and t.is_deleted = 0 and tt.is_deleted = 0",
+            "and c.id = #{courseId}"
+    })
+    CourseIntroVo selectCourseById(@Param("courseId") Integer courseId);
 
 }

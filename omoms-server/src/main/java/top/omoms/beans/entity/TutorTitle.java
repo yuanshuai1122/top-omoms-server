@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
-public class TutorInfo {
+public class TutorTitle {
+
 
     /**
      * ID
@@ -14,28 +17,23 @@ public class TutorInfo {
     private Integer id;
 
     /**
-     * 讲师id
+     * 头衔
      */
-    private Integer tutorId;
+    private String title;
 
     /**
-     * 头衔id
+     * 逻辑删除
      */
-    private Integer title_id;
+    private Integer isDeleted;
 
     /**
-     * 性别
+     * 创建时间
      */
-    private String sex;
+    private Date createTime;
 
     /**
-     * 头像
+     * 更新时间
      */
-    private String avatar;
-
-    /**
-     * 描述
-     */
-    private String description;
+    private Date updateTime;
 
 }

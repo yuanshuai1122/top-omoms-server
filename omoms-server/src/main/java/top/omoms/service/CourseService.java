@@ -10,6 +10,7 @@ import top.omoms.beans.common.ResultBean;
 import top.omoms.beans.dto.CourseClickCountDTO;
 import top.omoms.beans.entity.Course;
 import top.omoms.beans.vo.AllCourse;
+import top.omoms.beans.vo.CourseIntroVo;
 import top.omoms.beans.vo.NewestCourse;
 import top.omoms.enums.RetCodeEnum;
 import top.omoms.mapper.CourseMapper;
@@ -67,5 +68,21 @@ public class CourseService {
             return;
         }
         asyncService.addCourseClickCount(dto);
+    }
+
+    /**
+     * 获取课程介绍
+     * @param courseId 课程id
+     * @return 课程介绍
+     */
+    public ResultBean<Object> getCourseIntro(Integer courseId) {
+
+        CourseIntroVo courseIntro = courseMapper.selectCourseById(courseId);
+        log.info("获取课程介绍结果, courseId:{}, courseIntro:{}", courseId, courseIntro);
+        if (null == courseIntro) {
+            return new ResultBean<>(RetCodeEnum.STATUS_ERROR, "课程不存在", null);
+        }
+
+        return new ResultBean<>(RetCodeEnum.SUCCESS, "获取成功", courseIntro);
     }
 }
