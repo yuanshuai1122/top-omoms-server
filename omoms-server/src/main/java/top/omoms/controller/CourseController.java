@@ -35,4 +35,20 @@ public class CourseController {
         return courseService.getCourseIntro(courseId);
     }
 
+    /**
+     * 获取课程小节列表
+     * @param courseId 课程id
+     * @return 小节列表
+     */
+    @GetMapping("/part/list")
+    public ResultBean<Object> getCoursePartList(@RequestParam("courseId") Integer courseId) {
+        log.info("开始获取课程小节列表, courseId:{}", courseId);
+        if (null == courseId || courseId <= 0) {
+            return new ResultBean<>(RetCodeEnum.PARAM_ERROR, "参数错误", null);
+        }
+
+        return courseService.getCoursePartList(courseId);
+    }
+
+
 }
