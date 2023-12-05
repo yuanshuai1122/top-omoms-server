@@ -66,13 +66,18 @@ public class CourseService {
      * 增加课程点击量
      * @param dto 课程dto
      */
-    public void addCourseClickCount(CourseClickCountDTO dto) {
-        Course course = courseMapper.selectById(dto.getCourseId());
+    public ResultBean<Object> addCourseClickCount(CourseClickCountDTO dto) {
+        Course course = new LambdaQueryChainWrapper<Course>(courseMapper)
+                .eq(Course::getId, dto.getCourseId())
+                .eq(Course::getIsDeleted, 0)
+                .one();
         log.info("增加课程点击量查询课程, dto:{}, course:{}", dto, course);
         if (null == course) {
-            return;
+            return new ResultBean<>(RetCodeEnum.STATUS_ERROR, "课程不存在", null);
         }
         asyncService.addCourseClickCount(dto);
+
+        return new ResultBean<>(RetCodeEnum.SUCCESS, "成功", null);
     }
 
     /**
