@@ -20,6 +20,11 @@ public class CoursePart {
     private Integer courseId;
 
     /**
+     * 是否可试看
+     */
+    private Integer isTry;
+
+    /**
      * 章节标题
      */
     private String partTitle;

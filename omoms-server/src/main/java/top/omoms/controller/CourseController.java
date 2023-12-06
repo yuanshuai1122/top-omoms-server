@@ -2,10 +2,7 @@ package top.omoms.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.omoms.beans.common.ResultBean;
 import top.omoms.enums.RetCodeEnum;
 import top.omoms.service.CourseService;
@@ -48,6 +45,20 @@ public class CourseController {
         }
 
         return courseService.getCoursePartList(courseId);
+    }
+
+    /**
+     * 获取课程小节详情
+     * @param partId 课程小节id
+     * @return 小节详情
+     */
+    @GetMapping("/part/{partId}")
+    public ResultBean<Object> getCoursePartDetail(@PathVariable Integer partId) {
+        if (null == partId || partId <= 0) {
+            return new ResultBean<>(RetCodeEnum.PARAM_ERROR, "参数错误", null);
+        }
+
+        return courseService.getCoursePartDetail(partId);
     }
 
 
