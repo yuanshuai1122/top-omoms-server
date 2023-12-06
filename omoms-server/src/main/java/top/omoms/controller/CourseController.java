@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import top.omoms.beans.common.ResultBean;
+import top.omoms.beans.dto.CourseSubscribeDTO;
+import top.omoms.beans.vo.UserSubsStatus;
 import top.omoms.enums.RetCodeEnum;
 import top.omoms.service.CourseService;
 
@@ -60,6 +62,37 @@ public class CourseController {
 
         return courseService.getCoursePartDetail(partId);
     }
+
+
+    /**
+     * 订阅课程
+     * @param dto dto
+     * @return 订阅结果
+     */
+    @PostMapping("/subscribe")
+    public ResultBean<Object> courseSubscribe(@RequestBody CourseSubscribeDTO dto) {
+        if (dto.getCourseId() == null || dto.getCourseId() <= 0) {
+            return new ResultBean<>(RetCodeEnum.PARAM_ERROR, "参数错误", null);
+        }
+
+        return courseService.courseSubscribe(dto);
+    }
+
+
+    /**
+     * 检查是否已经订阅该课程
+     * @param courseId 课程id
+     * @return 订阅状态
+     */
+    @GetMapping("/subscribe/check")
+    public ResultBean<UserSubsStatus> courseSubscribeCheck(@RequestParam("courseId") Integer courseId) {
+        if (null == courseId || courseId <= 0) {
+            return new ResultBean<>(RetCodeEnum.PARAM_ERROR, "参数错误", null);
+        }
+
+        return courseService.courseSubscribeStatus(courseId);
+    }
+
 
 
 }

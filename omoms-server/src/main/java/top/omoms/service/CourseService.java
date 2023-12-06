@@ -1,15 +1,13 @@
 package top.omoms.service;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.omoms.beans.common.ResultBean;
 import top.omoms.beans.dto.CourseClickCountDTO;
+import top.omoms.beans.dto.CourseSubscribeDTO;
 import top.omoms.beans.entity.*;
 import top.omoms.beans.vo.*;
 import top.omoms.enums.RetCodeEnum;
@@ -17,7 +15,6 @@ import top.omoms.mapper.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -242,4 +239,64 @@ public class CourseService {
         return new ResultBean<>(RetCodeEnum.SUCCESS, "验证成功", course);
     }
 
+
+    /**
+     * 订阅课程
+     * @param dto dto
+     * @return 订阅结果
+     */
+    public ResultBean<Object> courseSubscribe(CourseSubscribeDTO dto) {
+        // 验证课程是否存在
+        ResultBean<Course> courseValidation = courseValidation(dto.getCourseId());
+        if (!courseValidation.Success()) {
+            return new ResultBean<>(courseValidation.getRetCode(), courseValidation.getMessage(), courseValidation.getData());
+        }
+        // 验证课程是否已经订阅
+        ResultBean<UserSubsStatus> courseSubscribeStatus = courseSubscribeStatus(dto.getCourseId());
+        if (!courseSubscribeStatus.Success()) {
+            return new ResultBean<>(courseSubscribeStatus.getRetCode(), courseSubscribeStatus.getMessage(), courseSubscribeStatus.getData());
+        }
+
+        if (Boolean.TRUE.equals(courseSubscribeStatus.getData().getIsSubs())) {
+            return new ResultBean<>(RetCodeEnum.STATUS_ERROR, "您已经订阅此课程，无需重复订阅", null);
+        }
+
+        // 获取用户信息
+        User user = userService.getLoginUserInfo().getData();
+
+        // 插入到订阅表
+        UserSubs userSubs = new UserSubs();
+        userSubs.setUserId(user.getId());
+        userSubs.setCourseId(dto.getCourseId());
+        int insert = userSubsMapper.insert(userSubs);
+        if (insert <= 0) {
+            return new ResultBean<>(RetCodeEnum.STATUS_ERROR, "订阅失败，请稍后重试", null);
+        }
+
+        return new ResultBean<>(RetCodeEnum.SUCCESS, "订阅成功", null);
+
+    }
+
+
+    /**
+     * 检查是否已经订阅该课程
+     * @param courseId 课程id
+     * @return 订阅状态
+     */
+    public ResultBean<UserSubsStatus> courseSubscribeStatus(Integer courseId) {
+
+        // 获取用户信息
+        User user = userService.getLoginUserInfo().getData();
+
+        // 检查是否已经订阅
+        UserSubs subs = new LambdaQueryChainWrapper<UserSubs>(userSubsMapper)
+                .eq(UserSubs::getUserId, user.getId())
+                .eq(UserSubs::getCourseId, courseId)
+                .one();
+
+        UserSubsStatus status = new UserSubsStatus();
+        status.setIsSubs(subs != null);
+
+        return new ResultBean<>(RetCodeEnum.SUCCESS, "获取成功", status);
+    }
 }
