@@ -10,17 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.omoms.beans.common.ResultBean;
 import top.omoms.beans.dto.CourseClickCountDTO;
-import top.omoms.beans.entity.Course;
-import top.omoms.beans.entity.CoursePart;
-import top.omoms.beans.entity.User;
-import top.omoms.beans.vo.AllCourse;
-import top.omoms.beans.vo.CourseIntroVo;
-import top.omoms.beans.vo.NewestCourse;
+import top.omoms.beans.entity.*;
+import top.omoms.beans.vo.*;
 import top.omoms.enums.RetCodeEnum;
-import top.omoms.mapper.CourseMapper;
-import top.omoms.mapper.CoursePartMapper;
+import top.omoms.mapper.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -36,6 +33,12 @@ public class CourseService {
     private final UserService userService;
 
     private final UserSubsService userSubsService;
+
+    private final UserSubsMapper userSubsMapper;
+
+    private final CourseCollectionRelMapper courseCollectionRelMapper;
+
+    private final CourseCollectionMapper courseCollectionMapper;
 
 
     /**
@@ -94,11 +97,60 @@ public class CourseService {
     public ResultBean<Object> getCourseIntro(Integer courseId) {
 
         CourseIntroVo courseIntro = courseMapper.selectCourseById(courseId);
-        log.info("获取课程介绍结果, courseId:{}, courseIntro:{}", courseId, courseIntro);
         if (null == courseIntro) {
             return new ResultBean<>(RetCodeEnum.STATUS_ERROR, "课程不存在", null);
         }
+        // 查询课程订阅量
+        Long count = new LambdaQueryChainWrapper<>(userSubsMapper).eq(UserSubs::getCourseId, courseId).count();
+        courseIntro.setSubsCount(Math.toIntExact(count));
 
+        // 查询系列课程
+        CourseCollectionRel courseCollectionRel = new LambdaQueryChainWrapper<CourseCollectionRel>(courseCollectionRelMapper)
+                .eq(CourseCollectionRel::getCourseId, courseId)
+                .one();
+        if (null == courseCollectionRel) {
+            // 不属于任何系列课
+            log.info("获取课程介绍结果, courseId:{}, courseIntro:{}", courseId, courseIntro);
+            return new ResultBean<>(RetCodeEnum.SUCCESS, "获取成功", courseIntro);
+        }
+
+        // 获取系列信息
+        CourseCollection courseCollection = new LambdaQueryChainWrapper<CourseCollection>(courseCollectionMapper)
+                .eq(CourseCollection::getId, courseCollectionRel.getCourseCollectionId())
+                .eq(CourseCollection::getIsDeleted, 0)
+                .one();
+        if (null == courseCollection) {
+            // 课程系列已经不存在
+            log.info("获取课程介绍结果, courseId:{}, courseIntro:{}", courseId, courseIntro);
+            return new ResultBean<>(RetCodeEnum.SUCCESS, "获取成功", courseIntro);
+        }
+
+        CourseCol courseCol = new CourseCol();
+        courseCol.setCourseCollectionTitle(courseCollection.getTitle());
+
+        // 获取系列列表
+        List<CourseCollectionRel> collectionRels = new LambdaQueryChainWrapper<CourseCollectionRel>(courseCollectionRelMapper)
+                .eq(CourseCollectionRel::getCourseCollectionId, courseCollectionRel.getCourseCollectionId())
+                .list();
+
+        List<Integer> courseIds = collectionRels.stream().map(CourseCollectionRel::getCourseId).toList();
+
+        // 获取课程列表
+        List<Course> courseList = new LambdaQueryChainWrapper<Course>(courseMapper)
+                .eq(Course::getIsDeleted, 0)
+                .in(Course::getId, courseIds)
+                .list();
+
+        List<CourseColInfo> courseColInfos = new ArrayList<>();
+        courseList.forEach(p -> {
+            courseColInfos.add(
+                    new CourseColInfo(p.getId(), p.getTitle(), p.getCover())
+            );
+        });
+        courseCol.setCourseCollectionList(courseColInfos);
+        courseIntro.setCourseCol(courseCol);
+
+        log.info("获取课程介绍结果, courseId:{}, courseIntro:{}", courseId, courseIntro);
         return new ResultBean<>(RetCodeEnum.SUCCESS, "获取成功", courseIntro);
     }
 

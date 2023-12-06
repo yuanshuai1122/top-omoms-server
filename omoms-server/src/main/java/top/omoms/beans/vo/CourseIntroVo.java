@@ -30,4 +30,16 @@ public class CourseIntroVo {
      */
     private String tutorTitle;
 
+    /**
+     * 订阅人数
+     */
+    private Integer subsCount;
+
+    /**
+     * 课程集合
+     */
+    private CourseCol courseCol;
+
+
+
 }
