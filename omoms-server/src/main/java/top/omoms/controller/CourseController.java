@@ -52,8 +52,8 @@ public class CourseController {
      * @param partId 课程小节id
      * @return 小节详情
      */
-    @GetMapping("/part/{partId}")
-    public ResultBean<Object> getCoursePartDetail(@PathVariable Integer partId) {
+    @GetMapping("/part/info")
+    public ResultBean<Object> getCoursePartDetail(@RequestParam("partId") Integer partId) {
         if (null == partId || partId <= 0) {
             return new ResultBean<>(RetCodeEnum.PARAM_ERROR, "参数错误", null);
         }
